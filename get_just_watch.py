@@ -133,20 +133,6 @@ def load_just_watch_data(tmdb_id, movie_title):
         return None
 
     try:
-        # movie_data = {
-        #     "title_just_watch": data["node"]["content"] ["title"],
-        #     "year_just_watch": data["node"]["content"]["originalReleaseYear"],
-        #     "poster_url_just_watch": data["node"]["content"]["posterUrl"],
-        #     "imdb_id_just_watch": data["node"]["content"]["externalIds"]["imdbId"],
-        #     "tmdb_id_just_watch": data["node"]["content"]["externalIds"]["tmdbId"],
-        #     "imdb_score_just_watch": data["node"]["content"]["scoring"]["imdbScore"],
-        #     "imdb_votes_just_watch": data["node"]["content"]["scoring"]["imdbVotes"],
-        #     "tmdb_popularity_just_watch": data["node"]["content"]["scoring"][
-        #         "tmdbPopularity"
-        #     ],
-        #     "tmdb_score_just_watch": data["node"]["content"]["scoring"]["tmdbScore"],
-        # }
-
         offers_data = []
         for offer in data["node"]["offers"]:
             offers_data.append(
