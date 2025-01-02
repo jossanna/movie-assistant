@@ -76,7 +76,8 @@ st.dataframe(
     column_config={
         "title": "Movie Title",
         "poster_path": st.column_config.ImageColumn("Poster", width="large"),
-        "offers": st.column_config.CategoricalColumn("Offers"),
+        "offers": st.column_config.ListColumn("Offers"),
+        "rating": st.column_config.NumberColumn("Rating", format="%d%%"),
     },
     hide_index=True,
 )
