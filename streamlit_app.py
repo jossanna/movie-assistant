@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 from get_just_watch import load_just_watch_data
 from get_user_watchlist import get_watchlist_data
-from get_letterboxd_data import get_letterboxd_data
+from get_letterboxd_data import scrape_letterboxd_data
 
 st.title("Movie Assistant")
 

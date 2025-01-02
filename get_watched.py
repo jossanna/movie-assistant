@@ -75,4 +75,4 @@ def get_user_data(username):
 
 if __name__ == "__main__":
     username = os.getenv("LETTERBOXD_USERNAME")
-    get_user_data(username)
+    watched_films = get_user_data(username)
