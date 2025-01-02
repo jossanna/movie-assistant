@@ -26,7 +26,7 @@ tmdb_data = load_tmdb_data()
 
 watchlist_letterboxd_data = []
 
-for item in watchlist_data[:5]:
+for item in watchlist_data:
     watchlist_letterboxd_data.append(scrape_letterboxd_data(item))
 
 
@@ -54,14 +54,29 @@ for tmdb_id, title in zip(
 
 offers_data_df = pd.DataFrame(offers_data)
 
+offers_data_df = offers_data_df.loc[
+    offers_data_df["monetization_type"] == "FLATRATE"
+].drop_duplicates(subset=["deeplink_url"])
+
+offer_dict = (
+    offers_data_df.groupby("tmdb_id_just_watch")["package_clear_name"]
+    .agg(list)
+    .to_dict()
+)
+
+watchlist_letterboxd_data_df["offers"] = (
+    watchlist_letterboxd_data_df["tmdb_id"].astype(str).map(offer_dict)
+)
 
 st.write("## Watchlist")
 
+
 st.dataframe(
-    watchlist_letterboxd_data_df.loc[:, ["title", "poster_path"]],
+    watchlist_letterboxd_data_df.loc[:, ["title", "poster_path", "offers"]],
     column_config={
         "title": "Movie Title",
-        "poster_path": st.column_config.ImageColumn("Poster", width="small"),
+        "poster_path": st.column_config.ImageColumn("Poster", width="large"),
+        "offers": st.column_config.CategoricalColumn("Offers"),
     },
     hide_index=True,
 )
