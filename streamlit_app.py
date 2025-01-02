@@ -58,10 +58,10 @@ offers_data_df = pd.DataFrame(offers_data)
 st.write("## Watchlist")
 
 st.dataframe(
-    watchlist_letterboxd_data_df,
+    watchlist_letterboxd_data_df.loc[:, ["title", "poster_path"]],
     column_config={
         "title": "Movie Title",
-        "poster_path": "Poster",
+        "poster_path": st.column_config.ImageColumn("Poster", width="small"),
     },
     hide_index=True,
 )

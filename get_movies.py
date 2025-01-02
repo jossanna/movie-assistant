@@ -38,6 +38,7 @@ print(f"Found CSV file: {source_path}")
 
 # Read CSV and save as pickle
 df = pd.read_csv(source_path)
+df.loc[df["id"] == 426063, :]
 df = df.loc[(df["adult"] == False) & (df["popularity"] >= 5), :]
 pickle_path = os.path.join(data_dir, "tmdb.pkl")
 df.to_pickle(pickle_path, compression="gzip")
