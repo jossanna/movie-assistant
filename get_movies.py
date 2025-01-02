@@ -1,6 +1,5 @@
 import kagglehub
 import os
-import shutil
 import glob
 import pandas as pd
 from dotenv import load_dotenv
@@ -41,10 +40,3 @@ print(f"Found CSV file: {source_path}")
 df = pd.read_csv(source_path)
 pickle_path = os.path.join(data_dir, "tmdb.pkl")
 df.to_pickle(pickle_path, compression="gzip")
-
-# Print file sizes
-csv_size = os.path.getsize(source_path) / (1024 * 1024)  # Convert to MB
-pkl_size = os.path.getsize(pickle_path) / (1024 * 1024)  # Convert to MB
-print(f"CSV file size: {csv_size:.2f} MB")
-print(f"Pickle file size: {pkl_size:.2f} MB")
-print(f"Dataset saved to: {pickle_path}")
