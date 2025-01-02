@@ -24,8 +24,9 @@ def get_letterboxd_data(movie_url_id):
     soup_rating = BeautifulSoup(response_rating.content, "lxml")
 
     data_base = {
+        "letterboxd_url_id": movie_url_id,
         "movie title": soup_base.find("meta", {"property": "og:title"})["content"],
-        "rating": soup_base.find("meta", {"name": "twitter:data2"})["content"][:3]
+        "rating": soup_base.find("meta", {"name": "twitter:data2"})["content"][:4]
         if soup_base.find("meta", {"name": "twitter:data2"})
         else "",
         "tmdb_id": soup_base.find("a", {"data-track-action": "TMDb"})["href"].split(
@@ -106,4 +107,4 @@ def get_letterboxd_data(movie_url_id):
         .replace(",", ""),
     }
 
-    return pd.DataFrame([data_base | data_stats | data_rating])
+    return {**data_base, **data_stats, **data_rating}
