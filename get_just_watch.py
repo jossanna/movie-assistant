@@ -70,7 +70,7 @@ def get_just_watch_data(search_term):
     variables = {
         "country": "DE",
         "language": "de",
-        "first": 10,
+        "first": 12,
         "filter": {"searchQuery": search_term},
     }
 
@@ -117,8 +117,12 @@ def get_just_watch_data_for_tmdb_id(tmdb_id, movie_title):
         return None
 
     for item in data:
-        if item["node"]["content"]["externalIds"]["tmdbId"] == tmdb_id:
-            return item
+        try:
+            if str(item["node"]["content"]["externalIds"]["tmdbId"]) == str(tmdb_id):
+                return item
+        except (KeyError, TypeError):
+            continue
+
     return None
 
 
@@ -126,46 +130,48 @@ def load_just_watch_data(tmdb_id, movie_title):
     data = get_just_watch_data_for_tmdb_id(tmdb_id, movie_title)
 
     if not data or "node" not in data:
-        return None, None
+        return None
 
     try:
-        df_movie = pd.DataFrame(
-            {
-                "title": [data["node"]["content"]["title"]],
-                "year": [data["node"]["content"]["originalReleaseYear"]],
-                "poster_url": [data["node"]["content"]["posterUrl"]],
-                "imdb_id": [data["node"]["content"]["externalIds"]["imdbId"]],
-                "tmdb_id": [data["node"]["content"]["externalIds"]["tmdbId"]],
-                "imdb_score": [data["node"]["content"]["scoring"]["imdbScore"]],
-                "imdb_votes": [data["node"]["content"]["scoring"]["imdbVotes"]],
-                "tmdb_popularity": [
-                    data["node"]["content"]["scoring"]["tmdbPopularity"]
-                ],
-                "tmdb_score": [data["node"]["content"]["scoring"]["tmdbScore"]],
-            },
-            index=[0],
-        )
+        # movie_data = {
+        #     "title_just_watch": data["node"]["content"] ["title"],
+        #     "year_just_watch": data["node"]["content"]["originalReleaseYear"],
+        #     "poster_url_just_watch": data["node"]["content"]["posterUrl"],
+        #     "imdb_id_just_watch": data["node"]["content"]["externalIds"]["imdbId"],
+        #     "tmdb_id_just_watch": data["node"]["content"]["externalIds"]["tmdbId"],
+        #     "imdb_score_just_watch": data["node"]["content"]["scoring"]["imdbScore"],
+        #     "imdb_votes_just_watch": data["node"]["content"]["scoring"]["imdbVotes"],
+        #     "tmdb_popularity_just_watch": data["node"]["content"]["scoring"][
+        #         "tmdbPopularity"
+        #     ],
+        #     "tmdb_score_just_watch": data["node"]["content"]["scoring"]["tmdbScore"],
+        # }
 
-        df_offers = pd.DataFrame(
-            {
-                "monetization_type": [data["node"]["offers"][0]["monetizationType"]],
-                "element_count": [data["node"]["offers"][0]["elementCount"]],
-                "retail_price_value": [data["node"]["offers"][0]["retailPriceValue"]],
-                "retail_price": [data["node"]["offers"][0]["retailPrice"]],
-                "currency": [data["node"]["offers"][0]["currency"]],
-                "standard_web_url": [data["node"]["offers"][0]["standardWebURL"]],
-                "deeplink_url": [data["node"]["offers"][0]["deeplinkURL"]],
-                "presentation_type": [data["node"]["offers"][0]["presentationType"]],
-                "package_id": [data["node"]["offers"][0]["package"]["id"]],
-                "package_clear_name": [
-                    data["node"]["offers"][0]["package"]["clearName"]
-                ],
-                "package_icon": [data["node"]["offers"][0]["package"]["icon"]],
-            }
-        )
-
-        return df_movie, df_offers
+        offers_data = []
+        for offer in data["node"]["offers"]:
+            offers_data.append(
+                {
+                    "tmdb_id_just_watch": data["node"]["content"]["externalIds"][
+                        "tmdbId"
+                    ],
+                    "monetization_type": offer["monetizationType"],
+                    "element_count": offer["elementCount"],
+                    "retail_price_value": offer["retailPriceValue"],
+                    "retail_price": offer["retailPrice"],
+                    "currency": offer["currency"],
+                    "standard_web_url": offer["standardWebURL"],
+                    "deeplink_url": offer["deeplinkURL"],
+                    "presentation_type": offer["presentationType"],
+                    "package_id": offer["package"]["id"],
+                    "package_clear_name": offer["package"]["clearName"],
+                    "package_icon": "https://images.justwatch.com"
+                    + offer["package"]["icon"]
+                    .replace("{profile}", "s100")
+                    .replace("{format}", "png"),
+                }
+            )
+        return offers_data
 
     except KeyError as e:
         print(f"Error parsing data: {e}")
-        return None, None
+        return None
