@@ -9,7 +9,7 @@ header = {
 }
 
 
-def get_letterboxd_data(movie_url_id):
+def scrape_letterboxd_data(movie_url_id):
     url_base = f"https://letterboxd.com/film/{movie_url_id}/"
     url_stats = f"https://letterboxd.com/csi/film/{movie_url_id}/stats/"
     url_rating = f"https://letterboxd.com/csi/film/{movie_url_id}/rating-histogram/"

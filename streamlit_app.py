@@ -27,7 +27,7 @@ tmdb_data = load_tmdb_data()
 watchlist_letterboxd_data = []
 
 for item in watchlist_data[:5]:
-    watchlist_letterboxd_data.append(get_letterboxd_data(item))
+    watchlist_letterboxd_data.append(scrape_letterboxd_data(item))
 
 
 watchlist_letterboxd_data_df = pd.DataFrame(watchlist_letterboxd_data)
