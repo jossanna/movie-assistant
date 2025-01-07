@@ -80,4 +80,5 @@ st.dataframe(
         "rating": st.column_config.NumberColumn("Rating", format="%d%%"),
     },
     hide_index=True,
+    width="large",
 )
